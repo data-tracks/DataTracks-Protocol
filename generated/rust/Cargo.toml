@@ -1,0 +1,13 @@
+[package]
+name = "schemas"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+flatbuffers = "25.2.10"
+
+[lib]
+path = "src/lib.rs" 
+
+[build-dependencies]
+flatbuffers = "25.2.10"
