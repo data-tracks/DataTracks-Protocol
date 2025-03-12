@@ -1,17 +1,114 @@
 namespace protocol;
-
-table Message {
-  action: string;
-  data: string;
+union CreateType {
+    CreatePlan
 }
 
-root_type Message;
+table Create {
+    create_type: CreateType;
+}
+
+table CreatePlan {
+    name: string;
+    plan: string;
+}
+
+table ByName {
+    name: string;
+}
+
+union FilterType {
+    ByName,
+}
+
+table Filter {
+    filter_type: FilterType;
+}
+
+table GetPlans {
+    name: Filter;
+}
+
+table GetPlan {
+    id: ulong;
+}
+
+union GetType {
+    GetPlans,
+    GetPlan
+}
 
 
 
-table Command {
-    action: string;
+table Get {
+    get_type: GetType;
+}
+
+
+
+table Plan {
+    name: string;
+    template: string;
+}
+
+
+table Plans {
+    plans: [Plan];
+}
+
+union Value {
+    Null,
+    String,
+    Integer,
+    Float,
+    List,
+    Document
+}
+
+table Null {}
+
+table String {
     data: string;
 }
 
-root_type Command;
+table Integer {
+    data: ulong;
+}
+
+table Float {
+    data: float;
+}
+
+table ValueWrapper {
+    data: Value;
+}
+
+table List {
+    data: [ValueWrapper];
+}
+
+table KeyValue {
+    key: Value;
+    values: Value;
+}
+
+table Document {
+    data: [KeyValue];
+}
+
+
+table Values {
+    values: [ValueWrapper];
+}
+
+union Payload {
+    Create,
+    Get,
+    Values,
+}
+
+
+table Message {
+  data: Payload;
+}
+
+root_type Message;

@@ -20,40 +20,38 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
-public final class Message extends Table {
+public final class ValueWrapper extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
-  public static Message getRootAsMessage(ByteBuffer _bb) { return getRootAsMessage(_bb, new Message()); }
-  public static Message getRootAsMessage(ByteBuffer _bb, Message obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static ValueWrapper getRootAsValueWrapper(ByteBuffer _bb) { return getRootAsValueWrapper(_bb, new ValueWrapper()); }
+  public static ValueWrapper getRootAsValueWrapper(ByteBuffer _bb, ValueWrapper obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public Message __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public ValueWrapper __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public byte dataType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public Table data(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
 
-  public static int createMessage(FlatBufferBuilder builder,
+  public static int createValueWrapper(FlatBufferBuilder builder,
       byte dataType,
       int dataOffset) {
     builder.startTable(2);
-    Message.addData(builder, dataOffset);
-    Message.addDataType(builder, dataType);
-    return Message.endMessage(builder);
+    ValueWrapper.addData(builder, dataOffset);
+    ValueWrapper.addDataType(builder, dataType);
+    return ValueWrapper.endValueWrapper(builder);
   }
 
-  public static void startMessage(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startValueWrapper(FlatBufferBuilder builder) { builder.startTable(2); }
   public static void addDataType(FlatBufferBuilder builder, byte dataType) { builder.addByte(0, dataType, 0); }
   public static void addData(FlatBufferBuilder builder, int dataOffset) { builder.addOffset(1, dataOffset, 0); }
-  public static int endMessage(FlatBufferBuilder builder) {
+  public static int endValueWrapper(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
   }
-  public static void finishMessageBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedMessageBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
 
-    public Message get(int j) { return get(new Message(), j); }
-    public Message get(Message obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
+    public ValueWrapper get(int j) { return get(new ValueWrapper(), j); }
+    public ValueWrapper get(ValueWrapper obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

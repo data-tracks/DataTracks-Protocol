@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { Payload, unionToPayload, unionListToPayload } from '../protocol/payload.js';
+
+
 export class Message {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
@@ -22,26 +25,22 @@ static getSizePrefixedRootAsMessage(bb:flatbuffers.ByteBuffer, obj?:Message):Mes
   return (obj || new Message()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-action():string|null
-action(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-action(optionalEncoding?:any):string|Uint8Array|null {
+dataType():Payload {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : Payload.NONE;
 }
 
-data():string|null
-data(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-data(optionalEncoding?:any):string|Uint8Array|null {
+data<T extends flatbuffers.Table>(obj:any):any|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
 }
 
 static startMessage(builder:flatbuffers.Builder) {
   builder.startObject(2);
 }
 
-static addAction(builder:flatbuffers.Builder, actionOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, actionOffset, 0);
+static addDataType(builder:flatbuffers.Builder, dataType:Payload) {
+  builder.addFieldInt8(0, dataType, Payload.NONE);
 }
 
 static addData(builder:flatbuffers.Builder, dataOffset:flatbuffers.Offset) {
@@ -53,9 +52,17 @@ static endMessage(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createMessage(builder:flatbuffers.Builder, actionOffset:flatbuffers.Offset, dataOffset:flatbuffers.Offset):flatbuffers.Offset {
+static finishMessageBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset);
+}
+
+static finishSizePrefixedMessageBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, undefined, true);
+}
+
+static createMessage(builder:flatbuffers.Builder, dataType:Payload, dataOffset:flatbuffers.Offset):flatbuffers.Offset {
   Message.startMessage(builder);
-  Message.addAction(builder, actionOffset);
+  Message.addDataType(builder, dataType);
   Message.addData(builder, dataOffset);
   return Message.endMessage(builder);
 }
