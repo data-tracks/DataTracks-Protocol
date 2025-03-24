@@ -1,0 +1,12 @@
+{
+  "name": "trackrails",
+  "version": "1.0.0",
+  "description": "TrackRails TypeScript for DataTracks",
+  "main": "generated/ts/src/protocol.ts",
+  "types": "generated/ts/src/protocol.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/data-tracks/TrackRails.git"
+  },
+  "license": "GPLv3"
+}
